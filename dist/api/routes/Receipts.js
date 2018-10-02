@@ -34,6 +34,21 @@ router.get('/:userId', function (req, res) {
   });
 });
 
+router.get('/:userId/:id', function (req, res) {
+  var userId = req.params.userId;
+  var id = req.params.id;
+  console.log(userId);
+  _Receipt2.default.find({ userId: userId, _id:id }).exec().then(function (docs) {
+    console.log(docs);
+    res.status(200).json(docs);
+  }).catch(function (err) {
+    console.log(err);
+    res.status(500).json({
+      error: err
+    });
+  });
+});
+
 // CREATE NEW DATA
 router.post('/', function (req, res) {
   if (!req.body.storeName) {
