@@ -160,7 +160,9 @@ module.exports = function ImageParseDataService() {
         }],
 
         image: {
-          content: img
+          "source": {
+            "imageUri": img
+          }
         }
       }]
     };
