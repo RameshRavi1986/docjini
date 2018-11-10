@@ -7,7 +7,7 @@ var _rules_en2 = _interopRequireDefault(_rules_en);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var http = require('http');
-var request = require('request');
+var request = require('request-promise');
 
 module.exports = function ImageParseDataService() {
   var formResult = {};
@@ -40,7 +40,7 @@ module.exports = function ImageParseDataService() {
   }
 
   this.parseData = function (data) {
-    alert("inside data");
+    console.log("inside data");
     formResult = {};
     scannedTxt = data.responses[0].fullTextAnnotation.text;
     scannedTxt = scannedTxt.toLowerCase();
@@ -59,8 +59,8 @@ module.exports = function ImageParseDataService() {
   }
   function sortDescending(list) {
     if (list && list.length > 0) {
-      alert("lsitlength");
-      alert(list.length);
+      console.log("lsitlength");
+      console.log(list.length);
       var sortedList = list.sort(function (a, b) {
         return b - a;
       });
@@ -73,13 +73,13 @@ module.exports = function ImageParseDataService() {
   }
 
   function getTotalPrice(sortedList) {
-    alert(sortedList[0]);
+    console.log(sortedList[0]);
     for (var i = 0; i < 6; i++) {
       if (!isNaN(sortedList[i])) {
         var regexNumber = new RegExp(sortedList[i], 'g');
         var occuringList = scannedTxt.match(regexNumber);
         if (occuringList && occuringList.length > 1) {
-          alert(formResult.total);
+          console.log(formResult.total);
           formResult.total = sortedList[i];
           break;
         }
@@ -94,7 +94,7 @@ module.exports = function ImageParseDataService() {
       if (_rules_en2.default[keys[i]].options) {
         // this.applyRules(rules[keys[i]], data);
       } else if (_rules_en2.default[keys[i]].valueRegex) {
-        var rege = new RegExp(_rules_en2.default[keys[i]].valueRegex);
+        var rege = new RegExp(_rules_en2.default[keys[i]].valueRegex, 'g');
         var regeArray = void 0;
         if (rege && rege instanceof Array) {
           regeArray = rege;
@@ -102,10 +102,10 @@ module.exports = function ImageParseDataService() {
           regeArray = [rege];
         }
         for (var _i = 0; _i < regeArray.length; _i++) {
-          alert("regex");
-          alert(regeArray[_i]);
-          var result = data.match(regeArray[_i]);
-          alert(result);
+          console.log("regex");
+          console.log(regeArray[_i]);
+          var result = data.match(new RegExp(regeArray[_i], 'g'));
+          console.log(result);
           if (result) {
             formResult[_rules_en2.default[keys[_i]].name] = result[result.length - 1];
           }
@@ -139,7 +139,7 @@ module.exports = function ImageParseDataService() {
       var executedResult = lines[j].match(rege);
 
       if (executedResult) {
-        var erg = new RegExp(rule.valueRegex);
+        var erg = new RegExp(rule.valueRegex, 'g');
 
         var finalOutput = lines[j + 1] && lines[j + 1].match(erg);
 
@@ -173,6 +173,7 @@ module.exports = function ImageParseDataService() {
       json: true
       // JSON stringifies the body automatically
     };
+    console.log(options);
     return request(options);
 
     /* $.ajax({

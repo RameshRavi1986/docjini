@@ -58,12 +58,13 @@ router.post('/scan/receipt', function (req, res) {
   if (!req.body.img) {
     console.log(img);return;
   }
+  console.log(req.body.img);
   imageService.parseImage(req.body.img).then(function (result) {
-    console.log(result);
-    res.status(201).json(imageService.parseData(result));
+    console.log(result.responses);
+    res.status(201).json({ sucess: "true" });
   }).catch(function (err) {
-    console.log(err);
-    res.status(500).json({
+    console.log(err.responses[0].error);
+    res.status(501).json({
       error: err
     });
   });
