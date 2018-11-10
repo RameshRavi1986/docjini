@@ -14,11 +14,16 @@ var _Receipt = require('../models/Receipt');
 
 var _Receipt2 = _interopRequireDefault(_Receipt);
 
+var _ImageParseDataService = require('../parser/ImageParseDataService');
+
+var _ImageParseDataService2 = _interopRequireDefault(_ImageParseDataService);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
 
 
+var imageService = new _ImageParseDataService2.default();
 // GET ALL DATA
 router.get('/:userId', function (req, res) {
   var userId = req.params.userId;
@@ -48,6 +53,22 @@ router.get('/:userId/:id', function (req, res) {
     });
   });
 });
+
+router.post('/scan/receipt', function (req, res) {
+  if (!req.body.img) {
+    console.log(img);return;
+  }
+  imageService.parseImage(req.body.img).then(function (result) {
+    console.log(result);
+    res.status(201).json(imageService.parseData(result));
+  }).catch(function (err) {
+    console.log(err);
+    res.status(500).json({
+      error: err
+    });
+  });
+});
+
 // CREATE NEW DATA
 router.post('/', function (req, res) {
   if (!req.body.storeName) {
